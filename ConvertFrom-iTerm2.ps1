@@ -1,10 +1,12 @@
 param(
-    [Parameter(Mandatory=$true,
+    [Parameter(Mandatory=$true,Position=0,
+    ValueFromPipelineByPropertyName=$true,
     HelpMessage="The URL with iTerm colours.")]
     [ValidateScript({ $_ -match '^http.*itermcolors$' })]
     [string]$colorFileURL
 )
 
+# example URL for testing
 # $colorFileURL = "https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Ubuntu.itermcolors"
 
 # function that takes as input a string with the iTerm color and outputs the Windows Terminal Color
