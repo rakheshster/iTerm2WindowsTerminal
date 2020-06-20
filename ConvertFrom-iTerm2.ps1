@@ -70,7 +70,7 @@ function ConvertReal2Hex {
 try {
     [xml]$xmlObj = $(Invoke-WebRequest $colorFileURL).Content
 } catch {
-    throw "$colorFileURL is invalid!"
+    throw $_.Exception.Message
 }
 
 $keysArray = @($xmlObj.plist.dict.key)
