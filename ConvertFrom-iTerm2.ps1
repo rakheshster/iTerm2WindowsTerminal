@@ -1,9 +1,17 @@
 param(
     [Parameter(Mandatory=$true,Position=0,
+    ParameterSetName="Internet",
     ValueFromPipelineByPropertyName=$true,
     HelpMessage="The URL with iTerm colours.")]
     [ValidateScript({ $_ -match '^http.*itermcolors$' })]
-    [string]$colorFileURL
+    [string]$colorFileURL,
+
+    [Parameter(Mandatory=$true,Position=0,
+    ParameterSetName="Local",
+    ValueFromPipelineByPropertyName=$true,
+    HelpMessage="A file iTerm colours.")]
+    [ValidateScript({ ([xml](Get-Content $_) -is [xml]) })]
+    [string]$colorFile
 )
 
 # example URL for testing
@@ -67,10 +75,19 @@ function ConvertReal2Hex {
     # The 2 after the X tells it to do 2 places. I realized this when some of the output didn't have 2 places. 
 }
 
-try {
-    [xml]$xmlObj = $(Invoke-WebRequest $colorFileURL).Content
-} catch {
-    throw $_.Exception.Message
+$finalOutput = @{}
+
+if ($colorFileURL) {
+    try {
+        [xml]$xmlObj = $(Invoke-WebRequest $colorFileURL).Content
+    } catch {
+        throw $_.Exception.Message
+    }
+    $finalOutput["name"] = $(Split-Path $colorFileURL -LeafBase)
+
+} else {
+    [xml]$xmlObj = [xml](Get-Content $colorFile)
+    $finalOutput["name"] = $(Split-Path $colorFile -LeafBase)
 }
 
 $keysArray = @($xmlObj.plist.dict.key)
@@ -79,8 +96,7 @@ $valuesArray = @($xmlObj.plist.dict.dict)
 $hexColorsArray = foreach ($value in $valuesArray) { ConvertReal2Hex $value.real }
 $winColorNamesArray = foreach ($key in $keysArray) { ConvertTerm2Terminals $key }
 
-$finalOutput = @{}
-$finalOutput["name"] = $(Split-Path $colorFileURL -LeafBase)
+
 for ($i = 0; $i -lt $winColorNamesArray.Length; $i++) {
     if ($winColorNamesArray[$i] -notmatch "^!") { $finalOutput[$winColorNamesArray["$i"]] = $hexColorsArray[$i] }
 }
