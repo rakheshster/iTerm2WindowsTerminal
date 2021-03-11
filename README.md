@@ -1,6 +1,6 @@
 # iTerm2 Colors to Windows Terminal colors
 
-The `ConvertFrom-iTerm2.ps1` script takes an iTerm2 color scheme and outputs JSON you can put into a Windows Terminal color scheme. You either specify an http(s) URL to an `itermcolors` file which it will download and output JSON, or pass it an already downloaded file. In case of the former use the `-ConfigFileURL` switch, in case of the latter use the `-ConfigFile` switch.
+The `ConvertFrom-iTerm2.ps1` script takes an iTerm2 color scheme and outputs JSON you can put into a Windows Terminal color scheme. You either specify an http(s) URL to an `itermcolors` file which it will download and output JSON, or pass it an already downloaded file. In case of the former use the `-ColorFileURL` switch, in case of the latter use the `-ColorFile` switch.
 
 You can find iTerm2 color schemes [here](https://iterm2colorschemes.com) for instance.
 
